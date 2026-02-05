@@ -62,5 +62,25 @@ object ImprovedErrorMessageDemo extends App {
   )
   printScenario(7, "Nested parameter error", nestedError)
 
+  // --- RESTORED JSON SECTION (Requested by Reviewer) ---
+  println(separator(length = 70))
+  println(s"   ${BOLD}JSON FORMAT (as returned to LLM)${RESET}   ")
+  println(separator(length = 70))
+
+  def toJsonError(error: ToolCallError): String = {
+    val message = error.getFormattedMessage
+      .replace("\\", "\\\\")
+      .replace("\"", "\\\"")
+      .replace("\n", "\\n")
+    s"""{ "isError": true, "error": "$message" }"""
+  }
+
+  println("\nExample JSON responses:")
+  println(s"${BOLD}1. Missing parameter:${RESET}")
+  println(toJsonError(missingParam))
+
+  println(s"\n${BOLD}2. Multiple errors:${RESET}")
+  println(toJsonError(multipleErrors))
+
   println(s"\n${CYAN}Demo Complete.${RESET}")
 }

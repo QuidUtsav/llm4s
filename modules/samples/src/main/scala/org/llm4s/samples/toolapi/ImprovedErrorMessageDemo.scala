@@ -62,7 +62,7 @@ object ImprovedErrorMessageDemo extends App {
   )
   printScenario(7, "Nested parameter error", nestedError)
 
-  // --- RESTORED JSON SECTION (Requested by Reviewer) ---
+  // JSON SECTION
   println(separator(length = 70))
   println(s"   ${BOLD}JSON FORMAT (as returned to LLM)${RESET}   ")
   println(separator(length = 70))

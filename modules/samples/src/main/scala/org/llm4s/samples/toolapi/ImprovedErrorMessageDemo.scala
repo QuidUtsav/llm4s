@@ -1,7 +1,7 @@
 package org.llm4s.samples.toolapi
 
 import org.llm4s.toolapi._
-import org.llm4s.trace.AnsiColors._
+import org.llm4s.samples.AnsiColors._
 
 object ImprovedErrorMessageDemo extends App {
 

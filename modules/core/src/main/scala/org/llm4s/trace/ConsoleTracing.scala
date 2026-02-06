@@ -38,17 +38,16 @@ import scala.util.Try
  * @see [[AnsiColors]] for color constants used
  */
 class ConsoleTracing extends Tracing {
-  import AnsiColors._
-
+  
   private def printHeader(title: String): Unit = {
-    val sep = separator()
-    println(s"$CYAN$BOLD$sep$RESET")
-    println(s"$CYAN$BOLD$title$RESET")
-    println(s"$CYAN$BOLD$sep$RESET")
+    val sep = "=" * 60
+    println(sep)
+    println(title)
+    println(sep)
   }
 
-  private def printSubHeader(title: String, color: String): Unit =
-    println(s"$color$BOLD--- $title ---$RESET")
+  private def printSubHeader(title: String): Unit =
+    println(s"--- $title ---")
 
   private def formatJson(json: String, maxLength: Int): String =
     if (json.length > maxLength) {
@@ -62,117 +61,120 @@ class ConsoleTracing extends Tracing {
       event match {
         case e: TraceEvent.AgentInitialized =>
           println()
-          printSubHeader("AGENT INITIALIZED", GREEN)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${GREEN}Query: ${e.query}$RESET")
-          println(s"${GREEN}Tools: ${e.tools.mkString(", ")}$RESET")
+          printSubHeader("AGENT INITIALIZED")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Query: ${e.query}")
+          println(s"Tools: ${e.tools.mkString(", ")}")
           println()
 
         case e: TraceEvent.CompletionReceived =>
           println()
           printHeader("COMPLETION RECEIVED")
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${GREEN}Model: ${e.model}$RESET")
-          println(s"${GREEN}ID: ${e.id}$RESET")
-          println(s"${GREEN}Tool Calls: ${e.toolCalls}$RESET")
-          println(s"${GREEN}Content: ${formatJson(e.content, 200)}$RESET")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Model: ${e.model}")
+          println(s"ID: ${e.id}")
+          println(s"Tool Calls: ${e.toolCalls}")
+          println(s"Content: ${formatJson(e.content, 200)}")
           println()
 
         case e: TraceEvent.ToolExecuted =>
           println()
-          printSubHeader("TOOL EXECUTED", CYAN)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${CYAN}Tool: ${e.name}$RESET")
-          println(s"${CYAN}Success: ${e.success}$RESET")
-          println(s"${CYAN}Duration: ${e.duration}ms$RESET")
-          println(s"${YELLOW}Input: ${formatJson(e.input, 100)}$RESET")
-          println(s"${GREEN}Output: ${formatJson(e.output, 100)}$RESET")
+          printSubHeader("TOOL EXECUTED")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Tool: ${e.name}")
+          println(s"Success: ${e.success}")
+          println(s"Duration: ${e.duration}ms")
+          println(s"Input: ${formatJson(e.input, 100)}")
+          println(s"Output: ${formatJson(e.output, 100)}")
           println()
 
         case e: TraceEvent.ErrorOccurred =>
           println()
           printHeader("ERROR OCCURRED")
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${RED}Type: ${e.error.getClass.getSimpleName}$RESET")
-          println(s"${RED}Message: ${e.error.getMessage}$RESET")
-          println(s"${RED}Context: ${e.context}$RESET")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Type: ${e.error.getClass.getSimpleName}")
+          println(s"Message: ${e.error.getMessage}")
+          println(s"Context: ${e.context}")
           println()
 
         case e: TraceEvent.TokenUsageRecorded =>
           println()
-          printSubHeader("TOKEN USAGE", MAGENTA)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${MAGENTA}Model: ${e.model}$RESET")
-          println(s"${MAGENTA}Operation: ${e.operation}$RESET")
-          println(s"${MAGENTA}Prompt Tokens: ${e.usage.promptTokens}$RESET")
-          println(s"${MAGENTA}Completion Tokens: ${e.usage.completionTokens}$RESET")
-          println(s"${MAGENTA}Total Tokens: ${e.usage.totalTokens}$RESET")
+          printSubHeader("TOKEN USAGE")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Model: ${e.model}")
+          println(s"Operation: ${e.operation}")
+          println(s"Prompt Tokens: ${e.usage.promptTokens}")
+          println(s"Completion Tokens: ${e.usage.completionTokens}")
+          println(s"Total Tokens: ${e.usage.totalTokens}")
           println()
 
         case e: TraceEvent.AgentStateUpdated =>
           println()
-          printSubHeader("AGENT STATE UPDATED", BLUE)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${BLUE}Status: ${e.status}$RESET")
-          println(s"${BLUE}Messages: ${e.messageCount}$RESET")
-          println(s"${BLUE}Logs: ${e.logCount}$RESET")
+          printSubHeader("AGENT STATE UPDATED")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Status: ${e.status}")
+          println(s"Messages: ${e.messageCount}")
+          println(s"Logs: ${e.logCount}")
           println()
 
         case e: TraceEvent.CustomEvent =>
           println()
-          printSubHeader("CUSTOM EVENT", YELLOW)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${YELLOW}Name: ${e.name}$RESET")
-          println(s"${YELLOW}Data: ${e.data}$RESET")
+          printSubHeader("CUSTOM EVENT")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Name: ${e.name}")
+          println(s"Data: ${e.data}")
           println()
 
         case e: TraceEvent.EmbeddingUsageRecorded =>
           println()
-          printSubHeader("EMBEDDING USAGE", MAGENTA)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${MAGENTA}Model: ${e.model}$RESET")
-          println(s"${MAGENTA}Operation: ${e.operation}$RESET")
-          println(s"${MAGENTA}Input Count: ${e.inputCount}$RESET")
-          println(s"${MAGENTA}Prompt Tokens: ${e.usage.promptTokens}$RESET")
-          println(s"${MAGENTA}Total Tokens: ${e.usage.totalTokens}$RESET")
+          printSubHeader("EMBEDDING USAGE")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Model: ${e.model}")
+          println(s"Operation: ${e.operation}")
+          println(s"Input Count: ${e.inputCount}")
+          println(s"Prompt Tokens: ${e.usage.promptTokens}")
+          println(s"Total Tokens: ${e.usage.totalTokens}")
           println()
 
         case e: TraceEvent.CostRecorded =>
           println()
-          printSubHeader("COST RECORDED", YELLOW)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${YELLOW}Model: ${e.model}$RESET")
-          println(s"${YELLOW}Operation: ${e.operation}$RESET")
-          println(s"${YELLOW}Token Count: ${e.tokenCount}$RESET")
-          println(s"${YELLOW}Cost Type: ${e.costType}$RESET")
-          println(s"${YELLOW}Cost (USD): $$${f"${e.costUsd}%.6f"}$RESET")
+          printSubHeader("COST RECORDED")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Model: ${e.model}")
+          println(s"Operation: ${e.operation}")
+          println(s"Token Count: ${e.tokenCount}")
+          println(s"Cost Type: ${e.costType}")
+          // FIXED: Used f-interpolator for proper currency formatting
+          println(f"Cost (USD): $$${e.costUsd}%.6f")
           println()
 
         case e: TraceEvent.CacheHit =>
           println()
-          printSubHeader("CACHE HIT", GREEN)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${GREEN}Similarity: ${f"${e.similarity}%.4f"}$RESET")
-          println(s"${GREEN}Threshold: ${f"${e.threshold}%.4f"}$RESET")
+          printSubHeader("CACHE HIT")
+          println(s"Timestamp: ${e.timestamp}")
+          // FIXED: Used f-interpolator for floats
+          println(f"Similarity: ${e.similarity}%.4f")
+          println(f"Threshold: ${e.threshold}%.4f")
           println()
 
         case e: TraceEvent.CacheMiss =>
           println()
-          printSubHeader("CACHE MISS", YELLOW)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${YELLOW}Reason: ${e.reason.value}$RESET")
+          printSubHeader("CACHE MISS")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Reason: ${e.reason.value}")
           println()
 
         case e: TraceEvent.RAGOperationCompleted =>
           println()
-          printSubHeader("RAG OPERATION COMPLETED", CYAN)
-          println(s"${GRAY}Timestamp: ${e.timestamp}$RESET")
-          println(s"${CYAN}Operation: ${e.operation}$RESET")
-          println(s"${CYAN}Duration: ${e.durationMs}ms$RESET")
-          e.embeddingTokens.foreach(t => println(s"${CYAN}Embedding Tokens: $t$RESET"))
-          e.llmPromptTokens.foreach(t => println(s"${CYAN}LLM Prompt Tokens: $t$RESET"))
-          e.llmCompletionTokens.foreach(t => println(s"${CYAN}LLM Completion Tokens: $t$RESET"))
-          e.totalCostUsd.foreach(c => println(s"${CYAN}Total Cost (USD): $$${f"$c%.6f"}$RESET"))
+          printSubHeader("RAG OPERATION COMPLETED")
+          println(s"Timestamp: ${e.timestamp}")
+          println(s"Operation: ${e.operation}")
+          println(s"Duration: ${e.durationMs}ms")
+          e.embeddingTokens.foreach(t => println(s"Embedding Tokens: $t"))
+          e.llmPromptTokens.foreach(t => println(s"LLM Prompt Tokens: $t"))
+          e.llmCompletionTokens.foreach(t => println(s"LLM Completion Tokens: $t"))
+          // FIXED: Used f-interpolator for proper currency formatting
+          e.totalCostUsd.foreach(c => println(f"Total Cost (USD): $$${c}%.6f"))
           println()
       }
     }.toEither.left.map(error => UnknownError(error.getMessage, error))

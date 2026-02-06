@@ -1,4 +1,4 @@
-package org.llm4s.trace
+package org.llm4s.samples
 
 /**
  * ANSI escape codes for terminal color formatting.
